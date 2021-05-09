@@ -15,7 +15,7 @@ async function initializeDbConnection() {
 
     console.log("connecting......");
   } catch (error) {
-    console.log(error);
+    console.log({error: error});
   }
 }
 
