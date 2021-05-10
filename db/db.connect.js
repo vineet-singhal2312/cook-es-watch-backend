@@ -9,12 +9,13 @@ async function initializeDbConnection() {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,
+        useFindAndModify: false,
       }
     );
 
     console.log("connecting......");
   } catch (error) {
-    console.log(error);
+    console.log({error: error});
   }
 }
 
