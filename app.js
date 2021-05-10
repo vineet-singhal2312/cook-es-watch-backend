@@ -1,10 +1,11 @@
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 8000;
 const cors = require("cors");
 const mongoose = require("mongoose");
 app.use(express.json());
-
 const { initializeDbConnection } = require("./db/db.connect");
 const video = require("./routes/videos.router");
 const history = require("./routes/history.router");
@@ -18,6 +19,7 @@ initializeDbConnection();
 app.get("/", (req, res) => {
   res.send("Hello Worlddd!");
 });
+3;
 
 app.use("/videos", video);
 app.use("/historyvideos", history);
