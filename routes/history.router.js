@@ -9,8 +9,10 @@ router
 
   .get(async (req, res) => {
     try {
+      const { userId } = req.user;
+      console.log(userId);
       const result = await HistoryVideo.find().populate("id");
-      console.log("............22");
+      // console.log("............22");
       res.send(result);
       // console.log(result);
     } catch (error) {
@@ -20,9 +22,8 @@ router
   .post(async (req, res) => {
     try {
       const { Id } = req.body;
-      // console.log(Id);
+
       const video = await HistoryVideo.find({ id: Id });
-      // console.log(video);
 
       if (video.length === 0) {
         const newHistoryVideo = new HistoryVideo({ id: Id });

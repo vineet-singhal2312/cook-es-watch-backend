@@ -1,5 +1,5 @@
 require("dotenv").config();
-
+const bodyParser = require("body-parser");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 8000;
@@ -13,16 +13,36 @@ const likedVideos = require("./routes/likedvideos.router");
 const watchLater = require("./routes/watchlater.router");
 const playlist = require("./routes/playlist.router");
 const dislikedvideos = require("./routes/dislikedvideos.router");
+const signup = require("./routes/userSignUp.router");
+const login = require("./routes/userLogIn.route");
+const authverify = require("./middlewares/auth.verify");
+
 app.use(cors());
+app.use(bodyParser.json());
 
 initializeDbConnection();
+
+// function AuthVerify(req, res, next) {
+//   const token = req.headers.authorization;
+//   console.log(token);
+//   if (token) {
+//     // const decoded = jwt.verify(token, "secret");
+
+//     console.log("decoded");
+//     next();
+//   } else {
+//     res.status(401).json({ success: false, message: "Invalid Token" });
+//   }
+// }
+
 app.get("/", (req, res) => {
   res.send("Hello Worlddd!");
 });
 3;
-
+app.use("/signup", signup);
+app.use("/login", login);
 app.use("/videos", video);
-app.use("/historyvideos", history);
+app.use("/historyvideos", authverify, history);
 app.use("/likedvideos", likedVideos);
 app.use("/watchlatervideos", watchLater);
 app.use("/playlists", playlist);
