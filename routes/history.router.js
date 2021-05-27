@@ -11,10 +11,11 @@ router
     try {
       const { userId } = req.user;
       console.log(userId);
-      const result = await HistoryVideo.find().populate("id");
-      // console.log("............22");
-      res.send(result);
-      // console.log(result);
+      const result = await HistoryVideo.find({ userId }).populate("videos");
+      console.log("............22");
+
+      res.status(200).json(result);
+      console.log(result);
     } catch (error) {
       res.status(404).send({ message: "error" });
     }
@@ -22,29 +23,60 @@ router
   .post(async (req, res) => {
     try {
       const { Id } = req.body;
+      console.log(Id);
+      const { userId } = req.user;
 
-      const video = await HistoryVideo.find({ id: Id });
+      const user = await HistoryVideo.find({ userId });
+      console.log(user);
 
-      if (video.length === 0) {
-        const newHistoryVideo = new HistoryVideo({ id: Id });
+      if (user.length === 0) {
+        console.log("ohhh naya user");
+
+        console.log(userId);
+
+        const newHistoryVideo = new HistoryVideo({
+          userId: userId,
+          videos: [Id],
+        });
 
         await newHistoryVideo.save();
-      }
-      res.send({ success: "true" });
+      } else {
+        console.log("aap to bhagwaaan ke saman ho");
+        console.log(user[0]._id);
 
-      // res.send({ true: "true" });
+        const videoStatus = user[0].videos.includes(Id);
+        console.log(videoStatus);
+
+        if (!videoStatus) {
+          await HistoryVideo.findByIdAndUpdate(user[0]._id, {
+            $push: { videos: Id },
+          });
+        }
+      }
+      res.status(200).json({ success: "true" });
     } catch (error) {
-      res.status(404).send({ message: "error" });
+      res.status(404).send({ message: "error!!!" });
     }
   })
   .delete(async (req, res) => {
     try {
+      console.log("sinchan sinchan pyara pyara");
       const { historyVideo_id } = req.body;
 
-      console.log(historyVideo_id);
-      await HistoryVideo.findByIdAndDelete(historyVideo_id);
-      const result = await HistoryVideo.find().populate("id");
-      res.send(result);
+      const { userId } = req.user;
+
+      const user = await HistoryVideo.find({ userId });
+      console.log(user);
+      console.log("lage he kitna cool");
+
+      await HistoryVideo.findByIdAndUpdate(user[0]._id, {
+        $pull: { videos: historyVideo_id },
+      });
+
+      console.log("jo hookum mere aka");
+      const result = await HistoryVideo.find({ userId }).populate("videos");
+
+      res.status(200).json(result);
     } catch (error) {
       res.status(404).send({ message: "error" });
     }

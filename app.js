@@ -43,8 +43,8 @@ app.use("/signup", signup);
 app.use("/login", login);
 app.use("/videos", video);
 app.use("/historyvideos", authverify, history);
-app.use("/likedvideos", likedVideos);
-app.use("/watchlatervideos", watchLater);
+app.use("/likedvideos", authverify, likedVideos);
+app.use("/watchlatervideos",authverify, watchLater);
 app.use("/playlists", playlist);
 app.use("/dislikedvideos", dislikedvideos);
 
