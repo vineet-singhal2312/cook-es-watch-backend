@@ -44,9 +44,9 @@ app.use("/login", login);
 app.use("/videos", video);
 app.use("/historyvideos", authverify, history);
 app.use("/likedvideos", authverify, likedVideos);
-app.use("/watchlatervideos",authverify, watchLater);
-app.use("/playlists", playlist);
-app.use("/dislikedvideos", dislikedvideos);
+app.use("/watchlatervideos", authverify, watchLater);
+app.use("/playlists", authverify, playlist);
+app.use("/dislikedvideos", authverify, dislikedvideos);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

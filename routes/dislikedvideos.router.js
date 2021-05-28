@@ -1,48 +1,42 @@
 const express = require("express");
-const { LikedVideo } = require("../model/likedvideos.model");
+const { DislikedVideo } = require("../model/dislikevideos.model");
 const { Video } = require("../model/video.model");
+const {
+  FindUserSendData,
+  PostVideo,
+  DeleteVideo,
+} = require("../utlis/routeControllers");
 const app = express();
 const router = express.Router();
 
 router
   .route("/")
+  .get(async (req, res) => {
+    try {
+      const { userId } = req.user;
+      await FindUserSendData(userId, DislikedVideo, res);
+    } catch (error) {
+      res.status(404).send({ success: false, message: "error" });
+    }
+  })
 
-  //   .get(async (req, res) => {
-  //     try {
-  //       const result = await LikedVideo.find().populate("id");
-  //       // console.log("............22");
-  //       res.send(result);
-  //       console.log(result);
-  //     } catch (error) {
-  //       res.status(404).send({ message: "error" });
-  //     }
-  //   })
   .post(async (req, res) => {
     try {
       const { Id } = req.body;
+      const { userId } = req.user;
 
-      await Video.findByIdAndUpdate(Id, { isDislike: true });
-      const result = await Video.find({ _id: Id });
-      console.log(result[0]);
-
-      res.send(result[0]);
+      await PostVideo(userId, Id, DislikedVideo, res);
     } catch (error) {
-      res.status(404).send({ message: "error" });
+      res.status(404).send({ success: false, message: "error!!!" });
     }
   })
   .delete(async (req, res) => {
     try {
       const { Id } = req.body;
-
-      // console.log(likedVideoid);
-      await Video.findByIdAndUpdate(Id, { isDislike: false });
-
-      const result = await Video.find({ _id: Id });
-      console.log(result[0]);
-
-      res.send(result[0]);
+      const { userId } = req.user;
+      await DeleteVideo(userId, Id, DislikedVideo, res);
     } catch (error) {
-      res.status(404).send({ message: "error" });
+      res.status(404).send({ success: false, message: "error" });
     }
   });
 

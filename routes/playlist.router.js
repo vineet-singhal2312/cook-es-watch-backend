@@ -1,6 +1,5 @@
 const express = require("express");
 const { PlayList } = require("../model/palylist.model");
-
 const app = express();
 const router = express.Router();
 
@@ -9,9 +8,11 @@ router
 
   .get(async (req, res) => {
     try {
-      const playlists = await PlayList.find().populate("videos");
+      const result = await PlayList.find().populate("videos");
 
-      res.send(playlists);
+      return res
+        .status(200)
+        .json({ success: true, message: "playlists data", result });
     } catch (error) {
       res.status(404).send({ message: "error" });
     }
@@ -19,13 +20,46 @@ router
 
   .post(async (req, res) => {
     try {
-      const { name } = req.body;
+      const { playlistName } = req.body;
+      const { userId } = req.user;
+      console.log(userId, playlistName);
 
-      const newPlayList = new PlayList({ name: name, videos: [] });
-      await newPlayList.save();
-      const playlists = await PlayList.find().populate("videos");
+      const user = await PlayList.find({ userId });
+      console.log({ user }, userId, playlistName);
+      if (user.length === 0) {
+        const newAddToBePlaylist = new PlayList({
+          userId: userId,
+          playlists: [
+            {
+              playlistName: playlistName,
+              videos: [],
+            },
+          ],
+        });
 
-      res.send(playlists);
+        await newAddToBePlaylist.save();
+
+        const result = await PlayList.find({ userId }).populate("videos");
+
+        return res
+          .status(200)
+          .json({ success: true, message: `playlist name post`, result });
+      } else {
+        await PlayList.findByIdAndUpdate(user[0]._id, {
+          $push: {
+            playlists: {
+              playlistName: playlistName,
+              videos: [],
+            },
+          },
+        });
+
+        const result = await PlayList.find({ userId }).populate("videos");
+
+        return res
+          .status(200)
+          .json({ success: true, message: `playlist name post`, result });
+      }
     } catch (error) {
       res.status(404).send({ message: "error" });
     }
@@ -50,37 +84,92 @@ router
 
   .post(async (req, res) => {
     try {
-      const { videoId, playlistId } = req.body;
+      const { videoId, playlistId, name } = req.body;
+      const { userId } = req.user;
+
+      console.log(videoId, playlistId, userId);
 
       console.log("1");
+      const user = await PlayList.find({ userId });
+      console.log({ user });
+      try {
+        PlayList.updateOne(
+          {
+            _id: user._id,
+            "playlists._id": playlistId,
+          },
+          {
+            $push: {
+              "playlists.$.videos": videoId,
+            },
+          }
+        );
 
-      console.log(videoId, playlistId);
+        // await PlayList.updateOne(
+        //   { $and: [{ _id: userId }, { "playlists.playlistName": name }] },
+        //   { $set: { "playlists.videos": videoId } }
+        // );
 
-      const playlist = await PlayList.find({ _id: playlistId });
+        // User.findOneAndUpdate({'playlists._id': req.params.postId},{"$push":{"posts":{"likes":req.header.authenticatedUser.nick}}}
 
-      if (playlist[0].videos.length === 0) {
-        await PlayList.findByIdAndUpdate(playlistId, {
-          $push: { videos: videoId },
-        });
+        // await PlayList.save();
+      } catch (error) {
+        console.log(error);
       }
 
-      if (playlist[0].videos.length > 0) {
-        console.log("andar");
+      // console.log(
+      //   user[0].playlists.find((playlist) => playlist._id == playlistId)
+      // );
+      // const updateTobePlayList = user[0].playlists.find(
+      //   (playlist) => playlist._id == playlistId
+      // );
+      // // await updateTobePlayList.save();
 
-        const state = playlist[0].videos.includes(videoId);
-        console.log(state);
+      // // await a.save();
+      // // console.log({ updateTobePlayList });
+      // await PlayList.findByIdAndUpdate(userId, {
+      //   playlists: [
+      //     playlists.findByIdAndUpdate(playlistId, {
+      //       $push: { videos: videoId },
+      //     }),
+      //   ],
+      // });
+      // // PlayList.markModified("videos");
+      console.log("2");
 
-        if (state !== true) {
-          console.log("andar AGAIN");
+      const result = await PlayList.find({ userId }).populate("videos");
 
-          await PlayList.findByIdAndUpdate(playlistId, {
-            $push: { videos: videoId },
-          });
-        }
-      }
+      return res
+        .status(200)
+        .json({ success: true, message: `playlist name post`, result });
 
-      const playlists = await PlayList.find().populate("videos");
-      res.send(playlists);
+      // console.log(videoId, playlistId);
+
+      // const playlist = await PlayList.find({ _id: playlistId });
+
+      // if (playlist[0].videos.length === 0) {
+      //   await PlayList.findByIdAndUpdate(playlistId, {
+      //     $push: { videos: videoId },
+      //   });
+      // }
+
+      // if (playlist[0].videos.length > 0) {
+      //   console.log("andar");
+
+      //   const state = playlist[0].videos.includes(videoId);
+      //   console.log(state);
+
+      //   if (state !== true) {
+      //     console.log("andar AGAIN");
+
+      //     await PlayList.findByIdAndUpdate(playlistId, {
+      //       $push: { videos: videoId },
+      //     });
+      //   }
+      // }
+
+      // const playlists = await PlayList.find().populate("videos");
+      // res.send(playlists);
     } catch (error) {
       res.status(404).send({ message: "error" });
     }
