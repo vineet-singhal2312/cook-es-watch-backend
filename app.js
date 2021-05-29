@@ -22,19 +22,6 @@ app.use(bodyParser.json());
 
 initializeDbConnection();
 
-// function AuthVerify(req, res, next) {
-//   const token = req.headers.authorization;
-//   console.log(token);
-//   if (token) {
-//     // const decoded = jwt.verify(token, "secret");
-
-//     console.log("decoded");
-//     next();
-//   } else {
-//     res.status(401).json({ success: false, message: "Invalid Token" });
-//   }
-// }
-
 app.get("/", (req, res) => {
   res.send("Hello Worlddd!");
 });

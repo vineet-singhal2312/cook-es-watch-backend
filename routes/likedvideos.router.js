@@ -4,7 +4,7 @@ const {
   FindUserSendData,
   PostVideo,
   DeleteVideo,
-} = require("../utlis/routeControllers");
+} = require("../controllers/routeControllers");
 const app = express();
 const router = express.Router();
 
