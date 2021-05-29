@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 async function initializeDbConnection() {
   try {
     await mongoose.connect(
-      process.env.REACT_APP_CONNECTION_STRING,
+      "mongodb+srv://vineet:cookieswatch@cluster0.z3zfu.mongodb.net/video-library?authSource=admin&replicaSet=atlas-ccakfu-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true",
 
       {
         useNewUrlParser: true,
@@ -15,7 +15,7 @@ async function initializeDbConnection() {
 
     console.log("connecting......");
   } catch (error) {
-    console.log({error: error});
+    console.log({ error: error });
   }
 }
 
