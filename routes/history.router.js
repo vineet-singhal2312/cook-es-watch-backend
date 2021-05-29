@@ -1,18 +1,19 @@
 const express = require("express");
-const app = express();
 const router = express.Router();
-const { Video } = require("../model/video.model");
 const { HistoryVideo } = require("../model/history.model");
+const {
+  FindUserSendData,
+  PostVideo,
+  DeleteVideo,
+} = require("../controllers/routeControllers");
 
 router
   .route("/")
 
   .get(async (req, res) => {
     try {
-      const result = await HistoryVideo.find().populate("id");
-      console.log("............22");
-      res.send(result);
-      // console.log(result);
+      const { userId } = req.user;
+      await FindUserSendData(userId, HistoryVideo, res);
     } catch (error) {
       res.status(404).send({ message: "error" });
     }
@@ -20,30 +21,22 @@ router
   .post(async (req, res) => {
     try {
       const { Id } = req.body;
-      // console.log(Id);
-      const video = await HistoryVideo.find({ id: Id });
-      // console.log(video);
+      const { userId } = req.user;
 
-      if (video.length === 0) {
-        const newHistoryVideo = new HistoryVideo({ id: Id });
+      await PostVideo(userId, Id, HistoryVideo, res);
 
-        await newHistoryVideo.save();
-      }
-      res.send({ success: "true" });
-
-      // res.send({ true: "true" });
+      const user = await HistoryVideo.find({ userId });
     } catch (error) {
-      res.status(404).send({ message: "error" });
+      res.status(404).send({ message: "error!!!" });
     }
   })
   .delete(async (req, res) => {
     try {
       const { historyVideo_id } = req.body;
 
-      console.log(historyVideo_id);
-      await HistoryVideo.findByIdAndDelete(historyVideo_id);
-      const result = await HistoryVideo.find().populate("id");
-      res.send(result);
+      const { userId } = req.user;
+
+      await DeleteVideo(userId, historyVideo_id, HistoryVideo, res);
     } catch (error) {
       res.status(404).send({ message: "error" });
     }

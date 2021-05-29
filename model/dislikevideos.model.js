@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const WatchLaterSchema = new mongoose.Schema({
+const DislikedVideoSchema = new mongoose.Schema({
   userId: { type: Schema.Types.ObjectId, ref: "User-sign-up" },
   videos: [
     {
@@ -11,6 +11,6 @@ const WatchLaterSchema = new mongoose.Schema({
   ],
 });
 
-const WatchLater = new mongoose.model("Watchlater-video", WatchLaterSchema);
+const DislikedVideo = new mongoose.model("Disliked-video", DislikedVideoSchema);
 
-module.exports = { WatchLater };
+module.exports = { DislikedVideo };

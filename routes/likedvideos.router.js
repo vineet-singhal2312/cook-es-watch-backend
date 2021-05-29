@@ -1,7 +1,10 @@
 const express = require("express");
 const { LikedVideo } = require("../model/likedvideos.model");
-const { Video } = require("../model/video.model");
-const app = express();
+const {
+  FindUserSendData,
+  PostVideo,
+  DeleteVideo,
+} = require("../controllers/routeControllers");
 const router = express.Router();
 
 router
@@ -9,44 +12,31 @@ router
 
   .get(async (req, res) => {
     try {
-      const result = await LikedVideo.find().populate("id");
-      // console.log("............22");
-      res.send(result);
-      console.log(result);
+      const { userId } = req.user;
+
+      await FindUserSendData(userId, LikedVideo, res);
     } catch (error) {
-      res.status(404).send({ message: "error" });
+      res.status(404).send({ success: false, message: "error" });
     }
   })
   .post(async (req, res) => {
     try {
       const { Id } = req.body;
-      // console.log(Id);
-      // console.log(video);
+      const { userId } = req.user;
 
-      const newLikedVideo = new LikedVideo({ id: Id });
-
-      await newLikedVideo.save();
-      await Video.findByIdAndUpdate(Id, { isLike: true });
-      const result = await Video.find({});
-      res.send(result);
-
-      // res.send({ true: "true" });
+      await PostVideo(userId, Id, LikedVideo, res);
     } catch (error) {
-      res.status(404).send({ message: "error" });
+      res.status(404).send({ success: false, message: "error!!!" });
     }
   })
   .delete(async (req, res) => {
     try {
-      const { likedvideo_id, video_id } = req.body;
+      const { Id } = req.body;
 
-      // console.log(likedVideoid);
-      await LikedVideo.findByIdAndDelete(likedvideo_id);
-      await Video.findByIdAndUpdate(video_id, { isLike: false });
-
-      const result = await LikedVideo.find().populate("id");
-      res.send(result);
+      const { userId } = req.user;
+      await DeleteVideo(userId, Id, LikedVideo, res);
     } catch (error) {
-      res.status(404).send({ message: "error" });
+      res.status(404).send({ success: false, message: "error" });
     }
   });
 
