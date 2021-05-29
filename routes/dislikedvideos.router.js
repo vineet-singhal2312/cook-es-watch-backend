@@ -1,12 +1,10 @@
 const express = require("express");
 const { DislikedVideo } = require("../model/dislikevideos.model");
-const { Video } = require("../model/video.model");
 const {
   FindUserSendData,
   PostVideo,
   DeleteVideo,
 } = require("../controllers/routeControllers");
-const app = express();
 const router = express.Router();
 
 router

@@ -1,5 +1,4 @@
 const PostPlaylist = async (userId, playlistName, collection, res) => {
-  console.log("aa gaya");
   const newAddToBePlaylist = new collection({
     userId: userId,
 
@@ -8,12 +7,9 @@ const PostPlaylist = async (userId, playlistName, collection, res) => {
   });
 
   await newAddToBePlaylist.save();
-  console.log("save");
 
   const result = await collection.find({ userId }).populate("videos");
-  console.log({ result });
-
-  return res
+ return res
     .status(200)
     .json({ success: true, message: `playlist name post`, result });
 };
@@ -23,7 +19,6 @@ const PostVideoInPlaylist = async (playlistId, collection, videoId, res) => {
     const playlist = await collection.find({ _id: playlistId });
     const videoStatus = playlist[0].videos.includes(videoId);
 
-    console.log(collection);
 
     if (!videoStatus) {
       await collection.findByIdAndUpdate(playlistId, {

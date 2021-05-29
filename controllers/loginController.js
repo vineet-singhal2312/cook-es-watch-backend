@@ -9,7 +9,6 @@ const passwordAuthentication = (
   name,
   res
 ) => {
-  console.log("me hu yaha");
   bcrypt.compare(password, userPassword, function (err, result) {
     if (err) {
       return res.json({ message: "something is wrong" });

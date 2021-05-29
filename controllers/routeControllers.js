@@ -1,13 +1,10 @@
 const FindUserSendData = async (userId, collection, res) => {
   const result = await collection.find({ userId }).populate("videos");
-  console.log("chlta hai");
-
   return res.status(200).json({ success: true, message: `sent data`, result });
 };
 
 const PostVideo = async (userId, videoId, collection, res) => {
   const user = await collection.find({ userId });
-
   if (user.length === 0) {
     const newAddToBeVideo = new collection({
       userId: userId,
@@ -33,7 +30,6 @@ const PostVideo = async (userId, videoId, collection, res) => {
   }
 
   const result = await collection.find({ userId }).populate("videos");
-  console.log("post bhi chalta hai!!");
 
   res
     .status(200)
@@ -48,7 +44,6 @@ const DeleteVideo = async (userId, videoId, collection, res) => {
   });
 
   const result = await collection.find({ userId }).populate("videos");
-  console.log("delete bhi chalta hai!!");
   res
     .status(200)
     .json({ success: true, message: `${collection} deleted`, result });

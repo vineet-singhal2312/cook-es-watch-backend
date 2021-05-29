@@ -1,7 +1,5 @@
 const express = require("express");
 const { userSignUp } = require("../model/userSignUp.model");
-const bcrypt = require("bcrypt");
-var jwt = require("jsonwebtoken");
 const { passwordAuthentication } = require("../controllers/loginController");
 
 const app = express();

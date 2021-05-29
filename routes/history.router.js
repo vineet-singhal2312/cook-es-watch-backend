@@ -13,8 +13,6 @@ router
   .get(async (req, res) => {
     try {
       const { userId } = req.user;
-      console.log(userId);
-
       await FindUserSendData(userId, HistoryVideo, res);
     } catch (error) {
       res.status(404).send({ message: "error" });
@@ -23,13 +21,11 @@ router
   .post(async (req, res) => {
     try {
       const { Id } = req.body;
-      console.log(Id);
       const { userId } = req.user;
 
       await PostVideo(userId, Id, HistoryVideo, res);
 
       const user = await HistoryVideo.find({ userId });
-      console.log(user);
     } catch (error) {
       res.status(404).send({ message: "error!!!" });
     }

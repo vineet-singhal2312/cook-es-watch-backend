@@ -1,9 +1,6 @@
 const express = require("express");
-const { userSignUp } = require("../model/userSignUp.model");
-const bcrypt = require("bcrypt");
 const { bcryptPasswordGenerator } = require("../controllers/signupController");
 
-const app = express();
 const router = express.Router();
 
 router

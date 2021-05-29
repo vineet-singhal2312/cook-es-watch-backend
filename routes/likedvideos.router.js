@@ -5,7 +5,6 @@ const {
   PostVideo,
   DeleteVideo,
 } = require("../controllers/routeControllers");
-const app = express();
 const router = express.Router();
 
 router
@@ -14,7 +13,6 @@ router
   .get(async (req, res) => {
     try {
       const { userId } = req.user;
-      console.log(userId);
 
       await FindUserSendData(userId, LikedVideo, res);
     } catch (error) {

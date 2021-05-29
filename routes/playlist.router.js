@@ -40,8 +40,6 @@ router
       const { playlistId } = req.body;
       const { userId } = req.user;
 
-      console.log(playlistId);
-
       await DeletePlaylist(playlistId, PlayList, userId, res);
     } catch (error) {
       res.status(404).send({ message: "error" });
@@ -55,7 +53,6 @@ router
     try {
       const { videoId, playlistId } = req.body;
 
-      console.log(videoId, playlistId);
       await PostVideoInPlaylist(playlistId, PlayList, videoId, res);
     } catch (error) {
       res.status(404).send({ message: "error" });
