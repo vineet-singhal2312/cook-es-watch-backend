@@ -11,7 +11,7 @@ router
       const { userName, email, password, confirmPassword } = req.body;
 
       if (password !== confirmPassword) {
-        res.status(400).json({ message: "Both password are not same!!" });
+        res.status(403).json({ message: "Both password are not same!!" });
       } else {
         bcryptPasswordGenerator(password, userName, email, res);
       }
