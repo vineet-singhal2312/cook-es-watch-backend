@@ -14,7 +14,6 @@ const PostVideo = async (userId, videoId, collection, res) => {
     await newAddToBeVideo.save();
 
     const result = await collection.find({ userId }).populate("videos");
-    console.log("post bhi chalta hai!!");
 
     return res
       .status(200)
