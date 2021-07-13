@@ -19,7 +19,7 @@ const passwordAuthentication = (
           userEmail: email,
           userId: id,
         },
-        "secret",
+        process.env.REACT_APP_SECRET_KEY_STRING,
         { expiresIn: "24h" }
       );
 
