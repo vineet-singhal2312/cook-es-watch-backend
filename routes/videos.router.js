@@ -10,8 +10,10 @@ router
   .get(async (req, res) => {
     try {
       const result = await Video.find({});
+      console.log(result);
       res.status(201).send(result);
     } catch (error) {
+      console.log(error);
       res.status(404).send(error);
     }
   });
